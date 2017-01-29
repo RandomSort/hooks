@@ -1,2 +1,4 @@
 #!/bin/bash
 echo "precommit for realz"
+echo "testing for other stuff"
+
