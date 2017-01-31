@@ -1,4 +1,7 @@
 #!/bin/bash
-echo "precommit for realz"
-echo "testing for other stuff"
-
+# Check where our HEAD is at
+if [ "$(git symbolic-ref --short HEAD)" == "master" ]; then	
+	echo "This is not the branch you are looking for"
+	exit 1
+fi
+exit 0
