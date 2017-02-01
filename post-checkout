@@ -1,0 +1,40 @@
+#!/bin/bash
+branch="$(git symbolic-ref --short HEAD)"
+workdir=`git rev-parse --show-toplevel`
+echo $branch
+`echo $branch | xargs | grep -q "ready/"` 
+on_ready=$?
+if [ $on_ready -ge 1 ]; then
+	# We are not on a ready branch, so let we'll just butt out
+	echo "Not on a ready branch"
+	exit 0
+fi
+#We are on a ready branch so let's see if we can do a ff-merge - otherwise we don't care
+ffable=`git rev-list --max-count 1 master..$branch`
+if [ $? -ge 1 ]; then
+	#Fast forward merges not possible
+	#We can't do a fast forward merge so let's abort this and move some stuff around
+	failbranch=`echo $branch | xargs | sed 's/ready/failed/'`
+	echo "Unable to fast forward master to $branch leaving state on $failbranch"
+	git checkout -b $failbranch
+	git branch -D $branch
+	exit 1
+fi
+#We can do a fast-forward merge so we'll run the local test and either merge or move to fail branch
+echo "Running tests"
+`$workdir/test`
+testresult=$?
+if [ $testresult -ge 1 ]; then
+	#Tests have failed so we do some cleanup stuff
+	failbranch=`echo $branch | xargs | sed 's/ready/failed/'`
+	echo "Testing has failed, leaving state on $failbranch"
+	git checkout -b $failbranch
+	git branch -D $branch
+	exit 1
+
+fi
+#tests ran sucessfully and we can do ff merge so let's complete
+git checkout master
+git merge $branch
+git branch -D $branch
+exit 0
