@@ -1,17 +1,18 @@
 #!groovy
-pipeline
-{
+pipeline {
 	agent any
-	stages
-	{
-	       stage('Greetings')
-	       {
+	stages 	{
+	       stage('Greetings') {
+	           steps
+	           {
 	           sh 'echo "hello"'
-		   sh 'echo "world!"'
+		       sh 'echo "world!"'
+	           }
 	       }
-	       stage('cleanup')
-	       {
-		   sh 'Cleaning up the stuffs'
+	       stage('cleanup') {
+	           steps{
+		        sh 'echo Cleaning up the stuffs'
+	           }
 	       }
 	 }
 }
