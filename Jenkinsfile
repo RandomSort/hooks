@@ -12,7 +12,7 @@ pipeline {
 	       stage('cleanup') {
 	           steps{
 		        sh 'echo Cleaning up the stuffs'
-			sh 'exit 1'
+			sh 'exit 0'
 			sh 'echo How does this work'
 	           }
 	       }
