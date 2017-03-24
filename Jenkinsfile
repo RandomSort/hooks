@@ -7,6 +7,9 @@ pipeline {
 	           {
 	           sh 'echo "hello"'
 		       sh 'echo "world!"'
+               input 'How does this work?'
+               sh 'echo 1'
+               sh 'echo 2'
 	           }
 	       }
 	       stage('cleanup') {
