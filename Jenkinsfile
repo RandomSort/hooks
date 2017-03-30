@@ -13,7 +13,9 @@ pipeline {
 	           }
 	       }
 		stage('fail') {
+		steps {
 		sh 'exit 1'
+}
 }
 	       stage('cleanup') {
 	           steps{
